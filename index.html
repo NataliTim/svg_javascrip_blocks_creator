@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<head>
+    <title>Natali java script</title>
+</head>
+<body>
+    <h1>Our Building</h1>
+    <p>Enter value here.</p>    
+    <input id="flor"> 
+    <input id="window">
+    <button type="button" onclick="house.amountGet()">GO!</button>
+     <p id="flortext">default flors amount 4</p>
+     <p id="windowtext">default windows amount 3</p>
+
+    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+    </svg>
+    <button type="button" onclick="house.clearSVG()">Clear SVG</button>
+</body>
+<script>
+
+document.embeds
+let house = {
+    florAmount: 4,
+    windowAmount: 3,
+    widthFlor: 1000,
+    heightFlor: 110,
+    widthWindow: 90,
+    heightWindow: 90,
+    svg: "",
+    florParameters(flory) {
+        let height = this.heightFlor;
+        let width = this.widthFlor;
+        let florBlock= document.createElementNS("http://www.w3.org/2000/svg", 'rect'); //Create a path in SVG's namespace
+            florBlock.setAttribute("y", flory);
+            florBlock.setAttribute("width", width);
+            florBlock.setAttribute("height", height);
+            florBlock.setAttribute("fill","#A6ACAF");
+        return florBlock;
+    },
+    windowParameters(windowx, windowy) {
+        let height = this.heightWindow;
+        let margin = this.margin();
+        this.widthWindow = (this.widthFlor - (margin * this.windowAmount) - margin) / this.windowAmount;
+        let width = this.widthWindow; 
+        console.log(width);    
+        let windowBlock= document.createElementNS("http://www.w3.org/2000/svg", 'rect'); //Create a path in SVG's namespace
+            windowBlock.setAttribute("x", windowx);
+            windowBlock.setAttribute("y", windowy);
+            windowBlock.setAttribute("width", width);
+            windowBlock.setAttribute("height", height);
+            windowBlock.setAttribute("fill","#AED6F1");
+        return windowBlock;
+    },
+    margin() {
+        return ((this.heightFlor - this.heightWindow) / 2);  
+    },
+    defineSVG() {
+        this.svg = document.getElementsByTagName('svg')[0]; //Get svg element
+    },
+    amountGet() {
+        this.amountFlor();
+        this.amountWindows();
+        this.clearSVG();
+        this.build();        
+    },
+    amountFlor() {
+        let x, text;
+        x = document.getElementById("flor").value;
+        if(isNaN(x) || x < 1 || x > 10) {
+            text = "flor's amount incorrect " + x + " so it would be 1";
+            x = 5;            
+        } else {
+            text = "flor's amount: " + x;
+        }
+        this.florAmount = x;
+        document.getElementById("flortext").innerHTML = text;
+    },
+    amountWindows() {
+        let x, text;
+        x = document.getElementById("window").value;
+        if(isNaN(x) || x < 1 || x > 200) {
+            text = "window's amount incorrect " + x + " so it would be 1";
+            x = 8;            
+        } else {
+            text = "window's amount: " + x;
+        }
+        this.windowAmount = x;
+        document.getElementById("windowtext").innerHTML = text;
+    },
+    clearSVG() {        
+        this.svg.innerHTML = '';
+    },
+    build() {
+        let flory = this.margin();
+        for (let i = 0; i < this.florAmount; i++) { 
+            let newFlor = this.florParameters(flory);
+            console.log( newFlor.attributes);
+            this.svg.appendChild(newFlor);    
+            var windowx =  this.margin();       
+                for (let j = 0; j < this.windowAmount; j++) { 
+                    let windowy = flory + this.margin();    
+                    let newWindow = this.windowParameters(windowx, windowy);
+                    this.svg.appendChild(newWindow);
+                    windowx += this.widthWindow + this.margin();
+                }
+            flory += house.heightFlor;
+        }
+    }
+
+  };
+  house.defineSVG();
+  house.build();
+  nataliTest = JSON.stringify(house);
+  console.log(nataliTest);
+</script>
+
+
+</html>
+
+
